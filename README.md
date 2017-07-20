@@ -10,5 +10,5 @@ This quick video will show the USP of this tool.
 
 [![Youtube Video](http://img.youtube.com/vi/6uBprLxyAdg/0.jpg)](https://youtu.be/6uBprLxyAdg)
 
-###Tech Notes
+### Tech Notes
 This tool is build using React, Redux, Immutable & Webpack. There is no unit testing for now and there wont be much helping comments. But the code is written in declarative and understandable manner.
