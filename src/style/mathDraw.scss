@@ -1,0 +1,417 @@
+.pathMathWrapper {
+  min-height: 100vh;
+  user-select:none;
+}
+
+.pathMathWrapper > div {
+  float: left;
+}
+
+.pathMathWrapper svg {
+  border: 1px solid  #c9c9ca;
+  background-color: #ddd;
+}
+
+.pathMathWrapper #svgWidth {
+  width: 60px;
+}
+
+.pathMathWrapper #svgHeight {
+  width: 60px;
+}
+
+.pathMathWrapper #sourcePanel {
+  width: 600px;
+  position: absolute;
+  background-color: $lightColor;
+  border: 1px solid $darkColor;
+  box-shadow: 4px 4px 4px #888;
+  right: 0;
+  top: 230px;
+  header {
+    background-color: $darkColor;
+    padding: 5px;
+    color:white;
+    i {
+      float: right;
+      display: block;
+    }
+  }
+  .source {
+    background-color: white;
+    border: 1px solid gray;
+    font-family: "Courier New", "Lucida Console", Monospace;
+    margin: 20px 20px 0 20px;
+    height: 400px;
+    width:calc(100% - 42px);
+    user-select:default;
+    color: $darkColor;
+  }
+  .footer{
+    padding:10px;
+    text-align: right;
+  }
+}
+
+.pathMathWrapper #allDrawsPanel {
+  position: absolute;
+  max-height: 600px;
+  overflow: auto;
+  width: 250px;
+  border: 1px solid #c9c9ca;
+  box-shadow: 0px 0 10px #888;
+  right: 0;
+  background-color:#ddd;
+  top: 230px;
+  min-height: 100px;
+  header {
+    background-color: $darkColor;
+    padding: 5px;
+    color: white;
+    i {
+      display: inline-block;
+      float: right;
+      padding-left:5px;
+    }
+  }
+  #downStackOrder{
+    
+   margin:30px 0 10px 10px;
+  }
+  #upStackOrder{
+     margin:30px 10px 10px 10px;
+  }
+  li {
+    background-color: #ddf;
+    cursor: default;
+    list-style-position: inside;
+    padding: 5px 10px;
+    &:hover {
+      background-color: #ffff99;
+    }
+    &.selected {
+      background-color: #ffff99;
+    }
+  }
+
+  .btn-primary:hover{
+    background-color:#ffff99;
+    color:#555;
+}
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active {
+    background-color:#ffff99;
+    color:#555;
+}
+
+.fa{
+  margin-right:5px;
+}
+
+}
+
+.pathMathWrapper .pathListWrapper {
+  max-height: 400px;
+ 
+
+  #d {
+    width: 300px;
+    height: 60px;
+  }
+
+  li {
+    background-color: #eee;
+    cursor: default;
+    list-style-position: inside;
+    padding: 5px 10px;
+    &:hover {
+      background-color: #ffff99;
+    }
+    &.selected {
+      background-color: #ffff99;
+    }
+    &.invalid{
+      color:#ff0000;
+    }
+  }
+}
+
+.pathListWrapper{
+  .dWrapper{
+    ::-webkit-scrollbar {
+    width: 0.5em;
+}
+  }
+textarea{
+
+      min-width:100%;
+}
+.btnWrapper{
+  button{
+    &:hover{
+         background-color:#ffff99;
+    }
+  }
+  
+}
+ol{
+  border:1px solid #c9c9ca;
+  box-shadow: 0 0 2px #888;
+  margin-top:5px;
+  max-height:200px;
+  overflow-y:auto;
+
+  li:hover {
+      background-color: #ffff99;
+    }
+    li.selected {
+      background-color: #ffff99;
+    }
+}
+
+}
+.pathMathWrapper #editItemPanel {
+  position: absolute;
+  background-color: $lightColor;
+  width: 350px;
+  color:$darkColor;
+  border: 1px solid #c9c9ca;
+  font-size: 0.8em;
+  box-shadow: 0 0 10px #888;
+  left: 700px;
+  top: 230px;
+  header {
+    background-color: $darkColor;
+    padding: 5px;
+    color: white;
+    i {
+      display: inline-block;
+      float: right;
+    }
+  }
+  & > div {
+    padding: 15px;
+    //border-bottom: 1px solid $darkColor;
+  }
+  input {
+    width: 50px;
+  }
+  button{
+    margin:5px 0 5px 5px;
+  }
+   input {
+    width: 45px;
+  }
+
+}
+
+
+.pathMathWrapper #guidePanel {
+  position: absolute;
+  background-color: $lightColor;
+  color:$darkColor;
+  width: 300px;
+  border: 1px solid $darkColor;
+  font-size: 0.8em;
+  box-shadow: 4px 4px 4px #888;
+  left: 80px;
+  top: 300px;
+  header {
+    background-color: $darkColor;
+    padding: 5px;
+    color: white;
+    i {
+      display: inline-block;
+      float: right;
+    }
+  }
+  & > div {
+    padding: 15px;
+    border-bottom: 1px solid $darkColor;
+  }
+  input[type=number] {
+    width: 50px;
+  }
+
+}
+
+.pathMathWrapper #propertiesPanel {
+  position: absolute;
+  background-color: $lightColor;
+  width: 300px;
+  border: 1px solid $darkColor;
+  font-size: 0.8em;
+  box-shadow: 4px 4px 4px #888;
+  left: 480px;
+  top: 300px;
+  color: $darkColor;
+  header {
+    background-color: $darkColor;
+    padding: 5px;
+    color: white;
+    i {
+      display: inline-block;
+      float: right;
+    }
+  }
+  & > div {
+    padding: 15px;
+    border-bottom: 1px solid $darkColor;
+  }
+  .divider {
+    margin: 0 10px ;
+    border-left: 1px solid $darkColor;
+    display: inline-block;
+  }
+}
+
+.toolsWrapper{
+button{
+  margin:5px;
+}
+.btn-primary{
+  background-color: #006674;
+    
+}
+.btn-primary:hover{
+    background-color:#ffff99;
+    color:#555;
+}
+/*
+.btn-primary:focus,
+ {
+    background-color:#ffff99;
+    color:#555;
+}
+*/
+.fa{
+ margin-right:5px ;
+}
+
+
+}
+
+.pathMathWrapper .toolsWrapper {
+  margin:10px;
+  .form-control{
+    padding:2px 2px;
+  }
+}
+
+#rootSvg {
+  background-color: #ddd;
+}
+
+#content {
+  background-color: white;
+}
+
+svg text {
+  font-family: monospace;
+  fill: #033138;
+  stroke: "none";
+}
+
+//form-control//
+
+.form-control{
+  width:auto;
+
+}
+.guideForm{
+  .guideXY{
+  margin: 10px;
+label{
+  margin-left: 26px;
+}
+#x{
+  margin-right: 14px;
+}
+.form-control{
+  padding:2px 2px;
+}
+}
+.guideWidth{
+  margin-top: 10px;
+  label{
+  margin-left: 12px;
+}
+.form-control{
+  padding:2px 2px;
+}
+}
+}
+
+/*.verti{
+padding-top: 10px !important;
+}*/
+
+.check{
+  margin-left:10px !important;
+ input[type="checkbox"]{
+ transform:scale(2);
+margin:10px 10px 10px 20px;
+}
+input[type="checkbox"]:checked{
+ color: red!important;
+}
+}
+
+.line{
+
+  margin-left:30px;
+   padding:2px 2px!important;
+}
+.line1{
+  margin-left:35px;
+  margin-top:25px;
+}
+
+.circle{
+  margin-left: 10px;
+}
+
+.ellipse{
+  margin-left: 30px;
+}
+.ellipse1{
+  margin-left: 32px;
+  margin-top:20px;
+}
+
+
+.lineWidth,.ellipseWidth,.circleWidth{
+  .form-control{
+    width:40px !important;
+     padding:2px 2px!important;
+  }
+}
+
+
+.circleXY,.loopCount{
+  padding-left:10px!important;
+  .form-control{
+   width:47px !important;
+     padding:1px 1px!important;
+  }
+  label{
+  margin-left:0px!important;
+}
+input{
+  margin-right: 7px;
+}
+}
+
+.propertyWidth{
+  label{
+margin-left:10px;
+  }
+}
+
+.stroke{
+  .form-control{
+    width:50px !important;
+     padding:2px 2px!important;
+  }
+}
