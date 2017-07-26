@@ -1,15 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { editItem } from '../../actions';
+import { editItem, editItemAttr, higherEdit } from '../../actions';
 import Modal from './Modal';
 import PathEditor from '../PathEditor';
 
 const defaultLoopInfo = {
   loop: {
     count: 5,
-    offset: 100,
-    step: 20
+    stepX: 100,
+    stepY: 0
   },
   '2dLoop': {
     count: 5,
@@ -41,18 +41,63 @@ let Editor = ({ data, index, dispatch, popups }) => {
 
   const loopInfoChange = (type, e) => {
     const newData = { ...data,
-      loopInfo: { ...data.loopInfo, [type]: e.target.value }
+      loopInfo: { ...data.loopInfo, [type]: parseInt(e.target.value) }
     };
     dispatch(editItem(newData, index));
   };
 
   const attrChange = (type, e) => {
-    const newData = { ...data, [type]: e.target.value };
-    dispatch(editItem(newData, index));
+    const newData = { ...data, [type]: parseInt(e.target.value) };
+    dispatch(editItemAttr(newData, index));
   };
 
   let input = '';
   switch (data.type) {
+    case 'rect':
+      input = (
+        <div className="lineWidth">
+          <label >X : </label>
+          <input
+            className="form-control"
+            type="text"
+            value={data.x}
+            onChange={(e) => { attrChange('x', e); }}
+          />
+          <label className="line">Y : </label>
+          <input
+            className="form-control"
+            type="text"
+            value={data.y}
+            onChange={(e) => { attrChange('y', e); }}
+          />
+          <div>
+            <label >Width : </label>
+            <input
+              className="form-control "
+              type="text"
+              value={data.width}
+              onChange={(e) => { attrChange('width', e); }}
+            />
+            <label className="line1">Height : </label>
+            <input
+              className="form-control "
+              type="text"
+              value={data.height}
+              onChange={(e) => { attrChange('height', e); }}
+            />
+          </div>
+          <div>
+            <label >Border Radius : </label>
+            <input
+              className="form-control "
+              type="text"
+              value={data.borderRadius}
+              onChange={(e) => { attrChange('borderRadius', e); }}
+            />
+          </div>
+        </div>
+        );
+      break;
     case 'line':
       input = (
         <div className="lineWidth">
@@ -169,22 +214,20 @@ let Editor = ({ data, index, dispatch, popups }) => {
             value={data.loopInfo.count}
             onChange={(e) => { loopInfoChange('count', e); }}
           />
-          <label>Offset :</label>
+          <label>Step - X :</label>
           <input
             className="form-control"
             type="number"
-            value={data.loopInfo.offset}
-            onChange={(e) => { loopInfoChange('offset', e); }}
+            value={data.loopInfo.stepX}
+            onChange={(e) => { loopInfoChange('stepX', e); }}
           />
-
-          <label >Step :</label>
+          <label>Step - Y :</label>
           <input
             className="form-control"
             type="number"
-            value={data.loopInfo.step}
-            onChange={(e) => { loopInfoChange('step', e); }}
+            value={data.loopInfo.stepY}
+            onChange={(e) => { loopInfoChange('stepY', e); }}
           />
-
         </div>
         );
       break;
@@ -251,6 +294,7 @@ let Editor = ({ data, index, dispatch, popups }) => {
               <option value = "2dLoop"> 2D Loop </option> */}
           <option value="circular" > Circular </option>
         </select>
+        <button onClick = {e => { dispatch(higherEdit())}} className="form-control" > Select All </button>
       </div>
       {loopDom}
       <div className="inputWrapper2">
@@ -261,9 +305,9 @@ let Editor = ({ data, index, dispatch, popups }) => {
 };
 
 
-const mapStateToProps = ({ allDraws, config }) => ({ data: allDraws.list.get(allDraws.currentId),
-  index: allDraws.currentId,
-  popups: config.popups
+const mapStateToProps = ({ allDraws, config }) => ({ data: allDraws.present.list.get(allDraws.present.currentId),
+  index: allDraws.present.currentId,
+  popups: config.present.popups
 });
 
 Editor = connect(mapStateToProps)(Editor);

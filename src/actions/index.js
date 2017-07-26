@@ -3,10 +3,19 @@ const currentId = 0;
 
 // Actions from Toolbar
 
-export const insert = insertType => ({
+export const changeInsertType = insertType => ({
+  type: 'CHANGE_INSERT_TYPE',
+  insertType
+})
+
+export const insert = (insertType, ptx = 0, pty = 0, pt2x = 0, pt2y = 0 ) => ({
   type: 'INSERT',
   insertType,
-  nextId: nextId++
+  nextId: nextId++,
+  ptx,
+  pty,
+  pt2x,
+  pt2y
 });
 
 export const remove = (isAll, id) => ({
@@ -66,10 +75,26 @@ export const editItem = (data, index) => ({
   data,
   index
 });
+//editItemMicro is only to avoid pushing into undo stack
+export const editItemMicro = (data, index) => ({
+  type: 'EDIT_ITEM_MICRO',
+  data,
+  index
+});
+
+export const editItemAttr = (data, index) => ({
+  type: 'EDIT_ITEM_ATTR',
+  data,
+  index
+});
 
 export const selectPathSeg = index => ({
   type: 'SELECT_PATH_SEG',
   index
+});
+
+export const higherEdit = () => ({
+  type: 'HIGHER_EDIT'
 });
 
 export const editSource = svgStr => ({

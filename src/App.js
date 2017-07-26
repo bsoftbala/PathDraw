@@ -10,7 +10,7 @@ import Guide from './components/Modals/Guide';
 
 const App = () => (
   <div className="pathMathWrapper">
-    
+
       <Toolbar />
       <SVGRoot />
       <Properties />

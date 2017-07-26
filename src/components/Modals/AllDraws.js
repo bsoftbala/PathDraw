@@ -41,7 +41,7 @@ let AllDraws = ({ allDraws, popups, dispatch }) => {
   );
 };
 
-const mapStateToProps = ({ config, allDraws }) => ({ allDraws, popups: config.popups });
+const mapStateToProps = ({ config, allDraws }) => ({ allDraws: allDraws.present, popups: config.present.popups });
 
 AllDraws = connect(mapStateToProps)(AllDraws);
 

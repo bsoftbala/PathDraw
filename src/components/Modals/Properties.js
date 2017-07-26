@@ -53,7 +53,7 @@ let Properties = ({ dispatch, ...props }) => {
   		);
 }
 
-const mapStateToProps = ({ config }) => ({ ...config });
+const mapStateToProps = ({ config }) => ({ ...config.present });
 
 Properties = connect(mapStateToProps)(Properties);
 

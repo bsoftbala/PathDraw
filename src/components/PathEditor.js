@@ -33,6 +33,10 @@ let PathEditor = ({ data, index, segIndex, dispatch }) => {
     }
   };
 
+  const btnGroupStyle = {
+    pointerEvents: (segIndex === -1) ? 'none' : 'auto',
+    opacity: (segIndex === -1) ? 0.5 : 1
+  }
 
   return (
     <div className="pathListWrapper">
@@ -44,12 +48,13 @@ let PathEditor = ({ data, index, segIndex, dispatch }) => {
         />
       </div>
       <div className="btnWrapper">
-        {/* <button onClick = {this.selectFullPath} className="form-control" > Select All </button> */}
-        <button onClick={() => changeMicroType('C')} className="form-control"> C </button>
-        <button onClick={() => changeMicroType('Q')} className="form-control"> Q </button>
-        <button onClick={() => changeMicroType('L')} className="form-control"> L </button>
-        <button onClick={() => changeMicroType('Insert')} className="form-control"> Insert After </button>
-        <button onClick={() => changeMicroType('Delete')} className="form-control"> Delete </button>
+        <span style = {btnGroupStyle} >
+          <button onClick={() => changeMicroType('C')} className="form-control"> C </button>
+          <button onClick={() => changeMicroType('Q')} className="form-control"> Q </button>
+          <button onClick={() => changeMicroType('L')} className="form-control"> L </button>
+          <button onClick={() => changeMicroType('Insert')} className="form-control"> Insert After </button>
+          <button onClick={() => changeMicroType('Delete')} className="form-control"> Delete </button>
+        </span>
       </div>
       <ol onClick={placeCtrls} >
         {
@@ -81,9 +86,9 @@ let PathEditor = ({ data, index, segIndex, dispatch }) => {
   );
 };
 
-const mapStateToProps = ({ allDraws, config }) => ({ data: allDraws.list.get(allDraws.currentId),
-  index: allDraws.currentId,
-  segIndex: allDraws.segIndex
+const mapStateToProps = ({ allDraws, config }) => ({ data: allDraws.present.list.get(allDraws.present.currentId),
+  index: allDraws.present.currentId,
+  segIndex: allDraws.present.segIndex
 });
 
 PathEditor = connect(mapStateToProps)(PathEditor);

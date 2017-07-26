@@ -4,6 +4,7 @@ const initialState = {
   stroke: '#0000ff',
   strokeWidth: 1,
   fill: 'none',
+  insertType: 'path',
   popups: {
         	allDraws: true,
         	editor: false,
@@ -16,16 +17,18 @@ const initialState = {
 
 export default function config(state = initialState, action) {
   switch (action.type) {
+    case 'CHANGE_INSERT_TYPE':
+      return { ...state, insertType: action.insertType}
     case 'CHANGE_DIMENSION':
       if (action.value < 50) {
-		      action.value = 50;
-		    } else if (action.value > 1000) {
-		      action.value = 1000;
-		    }
-		    if (action.isWidth) {
-		    	return { ...state, width: action.value };
-		    }
-		    	return { ...state, height: action.value };
+	      action.value = 50;
+	    } else if (action.value > 1000) {
+	      action.value = 1000;
+	    }
+	    if (action.isWidth) {
+	    	return { ...state, width: action.value };
+	    }
+	    	return { ...state, height: action.value };
 
     case 'CHANGE_STROKE':
       console.log(`action.value = ${action.value}`);

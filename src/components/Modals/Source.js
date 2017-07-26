@@ -43,7 +43,7 @@ class Source extends React.Component {
 
 }
 
-const mapStateToProps = ({config}) => ({config});
+const mapStateToProps = ({config}) => ({config: config.present});
 Source = connect(mapStateToProps)(Source);
 
 export default Source;

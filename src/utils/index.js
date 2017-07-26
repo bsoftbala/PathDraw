@@ -126,24 +126,10 @@ export function dataToNode(data) {
     }
     addObj.key = id;
     addObj.id = id;
-
-    switch (type) {
-      case 'line':
-        str = <line x1={obj.x1} y1={obj.y1} x2={obj.x2} y2={obj.y2} {...addObj} />;
-        break;
-      case 'circle':
-        str = <circle cx={obj.cx} cy={obj.cy} r={obj.r} {...addObj} />;
-        break;
-      case 'ellipse':
-        str = <ellipse cx={obj.cx} cy={obj.cy} rx={obj.rx} ry={obj.ry} {...addObj} />;
-        break;
-      case 'path':
-        str = <path d={obj.d} {...addObj} />;
-        break;
-    }
-    return str;
+    return <path d={obj.d} {...addObj} />;
   }
 
+  
   function getRotatedUnit(type, obj, rotObj, i) {
     let str = '';
     const addObj = {};
@@ -196,7 +182,7 @@ export function dataToNode(data) {
       case 'path':
         str = (<path
           d={obj.d}
-          transform={`rotate(${rotObj.rotation},${rotObj.cx},${rotObj.cy})`}
+          transform={rotObj.rotation === 0 ? '' : `rotate(${rotObj.rotation},${rotObj.cx},${rotObj.cy})`}
           {...addObj}
         />);
         break;
@@ -204,6 +190,7 @@ export function dataToNode(data) {
     return str;
   }
 
+/*
   function constructArr(obj) {
     const a = [];
     for (let i = 0; i < obj.loopInfo.count; i++) {
@@ -227,6 +214,24 @@ export function dataToNode(data) {
         }
       }
       a.push(o);
+    }
+    return a;
+  }
+  */
+
+  function constructArr(obj) {
+    const a = [];
+    for (let i = 0; i < obj.loopInfo.count; i++) {
+      if(i === 0){
+        a.push({...obj});
+      }else{
+        let list = dataToObj(obj.d);
+        console.log("obj.stepX", obj.stepX, obj.stepY);
+        console.dir(list);
+        let newList = translate(list, obj.loopInfo.stepX * i , obj.loopInfo.stepY * i);
+        console.dir(newList);
+        a.push({...obj, d:objToData(newList)})
+      }
     }
     return a;
   }
@@ -357,10 +362,11 @@ export function objToData(d) {
 }
 
 export function translate(d, tx, ty) {
-  console.log(tx, ty, d.size);
-  let list = new List();
-  for (let i = 0; i < d.size; i++) {
-    const obj = Object.assign({}, d.get(i));
+  console.log(tx, ty, d.length);
+  console.dir(d)
+  let list = [];
+  for (let i = 0; i < d.length; i++) {
+    const obj = Object.assign({}, d[i]);
     console.dir(obj);
     switch (obj.type) {
       case 'M':
@@ -383,17 +389,17 @@ export function translate(d, tx, ty) {
         obj.cty += ty;
         break;
     }
-    list = list.push(obj);
+    list.push(obj);
   }
-  console.dir(list.toJS());
+  console.dir(list);
   return list;
 }
 
 export function resize(d, ox, oy, sx, sy) {
-  let list = new List();
+  let list = [];
   console.log(ox, oy, sx, sy);
-  for (let i = 0; i < d.size; i++) {
-    const obj = Object.assign({}, d.get(i));
+  for (let i = 0; i < d.length; i++) {
+    const obj = Object.assign({}, d[i]);
     console.dir(obj);
     switch (obj.type) {
       case 'M':
@@ -416,18 +422,17 @@ export function resize(d, ox, oy, sx, sy) {
         obj.cty = parseInt(oy + (obj.cty - oy) * sy);
         break;
     }
-    list = list.push(obj);
+    list.push(obj);
   }
-  console.dir(list.toJS());
   return list;
 }
 
 
 export function rotate(d, ox, oy, r) {
   r = r * Math.PI / 180 * -1;
-  let list = new List();
-  for (let i = 0; i < d.size; i++) {
-    const obj = Object.assign({}, d.get(i));
+  let list = [];
+  for (let i = 0; i < d.length; i++) {
+    const obj = Object.assign({}, d[i]);
     console.dir(obj);
     let dx,
       dy,
@@ -475,25 +480,152 @@ export function rotate(d, ox, oy, r) {
         obj.cty = parseInt(oy + (obj.cty - oy) * sy);*/
         break;
     }
-    list = list.push(obj);
+    list.push(obj);
   }
-  console.dir(list.toJS());
   return list;
 }
 
+export function getSmoothPath(arr){
+    fillMorePts(arr);
+    var str = "M " + arr[0] + " " + arr[1] + " ";
+    var firstCtrlX = arr[2];
+    var firstCtrlY = arr[3];
+    var secCtrlX = 0;
+    var secCtrlY = 0;
+    var nextFirstX;
+    var nextFirstY;
+    for(var i = 2; i < arr.length; i+= 6){
+        if(nextFirstX){
+            firstCtrlX = nextFirstX;
+            firstCtrlY = nextFirstY;
+        }
+
+        if(i + 7 < arr.length){
+            var x1 = arr[i+2] - arr[i+4],
+                y1 = arr[i+3] - arr[i+5],
+                x2 = arr[i+6] - arr[i+4],
+                y2 = arr[i+7] - arr[i+5];
+
+            var anglea = Math.atan2(y1, x1),
+                angleb = Math.atan2(y2, x2),
+                r1 = Math.sqrt(x1*x1+y1*y1),
+                r2 = Math.sqrt(x2*x2+y2*y2);
+            if (anglea < 0) { anglea += 2*Math.PI; }
+            if (angleb < 0) { angleb += 2*Math.PI; }
+
+            var angleBetween = Math.abs(anglea - angleb),
+                angleDiff = Math.abs(Math.PI - angleBetween)/2;
+
+            var new_anglea, new_angleb;
+            if (anglea - angleb > 0) {
+                new_anglea = angleBetween < Math.PI ? (anglea + angleDiff) : (anglea - angleDiff);
+                new_angleb = angleBetween < Math.PI ? (angleb - angleDiff) : (angleb + angleDiff);
+            }
+            else {
+                new_anglea = angleBetween < Math.PI ? (anglea - angleDiff) : (anglea + angleDiff);
+                new_angleb = angleBetween < Math.PI ? (angleb + angleDiff) : (angleb - angleDiff);
+            }
+
+            // rotate the points
+
+            secCtrlX = r1 * Math.cos(new_anglea) + arr[i+4];
+            secCtrlY = r1 * Math.sin(new_anglea) + arr[i+5];
+
+
+            nextFirstX = r2 * Math.cos(new_angleb) + arr[i+4];
+            nextFirstY = r2 * Math.sin(new_angleb) + arr[i+5];
+        }else{
+            secCtrlX = arr[i+2];
+            secCtrlY = arr[i+3];
+        }
+        str += "C " + Math.round(firstCtrlX) + " " + Math.round(firstCtrlY) + " " + Math.round(secCtrlX) + " " + Math.round(secCtrlY) 
+                    + " " + Math.round(arr[i+4]) + " " + Math.round(arr[i+5]) + " ";
+
+        console.log("str = " + str);
+
+   };
+
+    return str;
+
+  function fillMorePts(arr) {
+      var len = arr.length / 2;
+      var xpos, ypos;
+      console.log("pos -- " + (len % 3));
+      if (len % 3 != 1) {
+          var lp = arr.length - 1;
+          xpos = (arr[lp - 1] + arr[lp - 3]) / 2;
+          ypos = (arr[lp] + arr[lp - 2]) / 2;
+          console.log("xpos = " + xpos + "," + ypos);
+          console.log("before : " + arr);
+          arr.splice(lp - 1, 0, xpos, ypos);
+          console.log("after : " + arr);
+      }
+      if (len % 3 == 2) {
+          var lp = arr.length - 1;
+          xpos = (arr[lp - 1] + arr[lp - 3]) / 2;
+          ypos = (arr[lp] + arr[lp - 2]) / 2;
+          console.log("xpos2 = " + arr[lp] + ":" + arr[lp - 2])
+          console.log("before : " + arr);
+          console.log("xpos2 = " + xpos + "," + ypos)
+          arr.splice(lp - 1, 0, xpos, ypos);
+          console.log("after : " + arr);
+      }
+      return arr;
+  }
+}
+
+  
 
 export function toData(pt, domRef, zoom) {
   if (!domRef) {
     domRef = document.getElementById('contentSvg');
   }
+  let rect = domRef.getBoundingClientRect();
+  let rootRect = document.getElementById('rootSvg').getBoundingClientRect();
+  return {
+    x: parseInt((pt.x - rect.left )/zoom),
+    y: parseInt((pt.y  - rect.top )/zoom)
+  };
+
+  /*
   return {
     x: parseInt((pt.x - parseInt(domRef.getAttribute('x'))) / zoom),
     y: parseInt((pt.y - parseInt(domRef.getAttribute('y'))) / zoom)
+  };*/
+}
+
+// form co-ords to ctrl pts to data
+export function toData2(pt, domRef, zoom) {
+  if (!domRef) {
+    domRef = document.getElementById('contentSvg');
+  }
+  let rect = domRef.getBoundingClientRect();
+  let rootRect = document.getElementById('rootSvg').getBoundingClientRect();
+  return {
+    x: parseInt((pt.x - domRef.getAttribute('x')) / zoom),
+    y: parseInt((pt.y - domRef.getAttribute('y')) / zoom)
   };
 }
 
-
 export function toActual(pt, domRef, zoom) {
+  if (!domRef) {
+    domRef = document.getElementById('contentSvg');
+  }
+  let rect = domRef.getBoundingClientRect();
+  let rootRect = document.getElementById('rootSvg').getBoundingClientRect();
+  return {
+    x: parseInt(pt.x * zoom + rect.left - rootRect.left),
+    y: parseInt(pt.y * zoom + rect.top - rootRect.top)
+  };
+  /*
+  return {
+    x: parseInt(pt.x * zoom + parseInt(domRef.getAttribute('x'))),
+    y: parseInt(pt.y * zoom + parseInt(domRef.getAttribute('y')))
+  };
+  */
+}
+
+export function toActual2(pt, domRef, zoom) {
   if (!domRef) {
     domRef = document.getElementById('contentSvg');
   }

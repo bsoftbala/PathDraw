@@ -125,7 +125,12 @@ class Ruler extends React.Component {
   }
 }
 
-const mapStateToProps = ({ config }) => ({ config });
+
+const mapStateToProps = ({ config }) => {
+  console.log("config");
+  console.dir(config);
+  return ({ config: config.present });
+}
 
 Ruler = connect(mapStateToProps)(Ruler);
 

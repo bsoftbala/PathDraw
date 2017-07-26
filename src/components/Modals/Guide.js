@@ -50,7 +50,13 @@ let Guide = props => {
             )
 };
 
-const mapStateToProps = ({ config }) => ({ popups: config.popups });
+const mapStateToProps = ({ config }) => {
+  console.log("guide");
+  console.dir(config.present);
+  console.dir(config.present.popups);
+  return ({ popups: config.present.popups });
+}
+
 Guide = connect(mapStateToProps)(Guide);
 
 export default Guide;
