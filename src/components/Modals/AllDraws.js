@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import Modal from './Modal';
-import { openUnitPopup, changeStackOrder } from '../../actions';
+import { openUnitPopup, changeStackOrder, showSelected, hideSelected } from '../../actions';
 
 let AllDraws = ({ allDraws, popups, dispatch }) => {
   if(!popups.allDraws){
@@ -17,13 +17,28 @@ let AllDraws = ({ allDraws, popups, dispatch }) => {
     }
   };
 
+  const showDraw = (id) => {
+      //console.log(`id = ${id}`);
+      dispatch(showSelected(id));
+  };
+
+  const hideDraw = (id) => {
+      dispatch(hideSelected(id));
+  };
+
   return (
     <Modal title="All Drawings " id="allDrawsPanel" isVisible={popups.allDraws} popupName={'allDraws'}>
       <ol id="unitDraw" onClick={onItemClick} >
         {
               allDraws.list.map((item, i) => (i === allDraws.currentId)
-                  ? <li key={i} id={`draw~${i}`} className="selected" > {item.type} | {item.id} </li>
-                  : <li key={i} id={`draw~${i}`} > {item.type} | {item.id} </li>
+                  ? <li key={i} id={`draw~${i}`} className="selected" > {item.type} | {item.id}
+                      &nbsp;<i className="fa fa-eye" aria-hidden="true" onClick={e => showDraw(i)} title="Show" />
+                      <i className="fa fa-eye-slash" aria-hidden="true" onClick={e => hideDraw(i)} title="Hide" />
+                    </li>
+                  : <li key={i} id={`draw~${i}`} > {item.type} | {item.id}
+                      &nbsp;<i className="fa fa-eye" aria-hidden="true" onClick={e => showDraw(i)} title="Show" />
+                      <i className="fa fa-eye-slash" aria-hidden="true" onClick={e => hideDraw(i)} title="Hide" />
+                    </li>
                   )
             }
       </ol>

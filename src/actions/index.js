@@ -102,3 +102,12 @@ export const editSource = svgStr => ({
   svgStr
 });
 
+export const showSelected = index => ({
+  type: 'SHOW_SELECTED',
+  index
+});
+
+export const hideSelected = index => ({
+  type: 'HIDE_SELECTED',
+  index
+});

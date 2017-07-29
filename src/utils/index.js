@@ -120,13 +120,18 @@ export function dataToNode(data) {
     if (obj.fill) {
     	addObj.fill = obj.fill;
     }
+    if(obj.showing){
+      obj.class = 'displayEditor';
+    }else{
+      obj.class = 'hideEditor';
+    }
     let id = obj.id;
     if (i) {
       id += `_${i}`;
     }
     addObj.key = id;
     addObj.id = id;
-    return <path d={obj.d} {...addObj} />;
+    return <path d={obj.d} className={obj.class} {...addObj} />;
   }
 
   
